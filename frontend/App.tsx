@@ -1,10 +1,11 @@
 // Component Type: Hybrid (AI structure + manual refinements)
-// Main application component with routing between hero, login, and dashboard
+// Main application component with theme provider and routing
 
 import React, { useState, useEffect } from 'react';
 import HeroPage from './components/hero/HeroPage';
 import LoginPage from './components/auth/LoginPage';
 import Dashboard from './components/dashboard/Dashboard';
+import { ThemeProvider } from './components/providers/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
 
 export type ViewType = 'hero' | 'login' | 'dashboard';
@@ -71,39 +72,43 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+      <ThemeProvider>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300">Loading ADmyBRAND...</p>
           </div>
-          <p className="text-gray-600">Loading ADmyBRAND...</p>
         </div>
-      </div>
+      </ThemeProvider>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {currentView === 'hero' && (
-        <HeroPage 
-          onNavigateToDashboard={navigateToDashboard}
-          onNavigateToLogin={navigateToLogin}
-        />
-      )}
-      {currentView === 'login' && (
-        <LoginPage 
-          onLogin={handleLogin}
-          onNavigateToHero={navigateToHero}
-        />
-      )}
-      {currentView === 'dashboard' && user && (
-        <Dashboard 
-          user={user}
-          onNavigateToHero={navigateToHero}
-          onLogout={handleLogout}
-        />
-      )}
-      <Toaster />
-    </div>
+    <ThemeProvider>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {currentView === 'hero' && (
+          <HeroPage 
+            onNavigateToDashboard={navigateToDashboard}
+            onNavigateToLogin={navigateToLogin}
+          />
+        )}
+        {currentView === 'login' && (
+          <LoginPage 
+            onLogin={handleLogin}
+            onNavigateToHero={navigateToHero}
+          />
+        )}
+        {currentView === 'dashboard' && user && (
+          <Dashboard 
+            user={user}
+            onNavigateToHero={navigateToHero}
+            onLogout={handleLogout}
+          />
+        )}
+        <Toaster />
+      </div>
+    </ThemeProvider>
   );
 }

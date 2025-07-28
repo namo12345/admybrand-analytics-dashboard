@@ -1,5 +1,5 @@
 // Component Type: Manual
-// Quick action buttons for common dashboard tasks with functional implementations
+// Enhanced quick action buttons with proper styling and functionality
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
@@ -7,72 +7,75 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { 
   Plus, 
   Upload, 
-  Download, 
-  Settings, 
   BarChart3, 
   Target,
   Zap,
-  Calendar
+  Calendar,
+  Settings,
+  TrendingUp
 } from 'lucide-react';
+import { useTheme } from '../providers/ThemeProvider';
 
 interface QuickActionsProps {
   onAction: (action: string) => void;
 }
 
 export default function QuickActions({ onAction }: QuickActionsProps) {
+  const { isDark } = useTheme();
+
   const actions = [
     {
       icon: Plus,
       title: 'New Campaign',
-      description: 'Create a new advertising campaign',
-      color: 'bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200',
+      description: 'Create advertising campaign',
+      color: isDark ? 'bg-blue-900/20 hover:bg-blue-900/30 text-blue-400 border-blue-800' : 'bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200',
       action: 'New Campaign'
     },
     {
       icon: Upload,
       title: 'Import Data',
-      description: 'Upload campaign or inventory data',
-      color: 'bg-green-50 hover:bg-green-100 text-green-600 border-green-200',
+      description: 'Upload CSV files',
+      color: isDark ? 'bg-green-900/20 hover:bg-green-900/30 text-green-400 border-green-800' : 'bg-green-50 hover:bg-green-100 text-green-600 border-green-200',
       action: 'Import Data'
     },
     {
       icon: BarChart3,
       title: 'Generate Report',
       description: 'Create performance reports',
-      color: 'bg-purple-50 hover:bg-purple-100 text-purple-600 border-purple-200',
+      color: isDark ? 'bg-purple-900/20 hover:bg-purple-900/30 text-purple-400 border-purple-800' : 'bg-purple-50 hover:bg-purple-100 text-purple-600 border-purple-200',
       action: 'Generate Report'
     },
     {
       icon: Target,
       title: 'Optimize Campaigns',
-      description: 'AI-powered optimization suggestions',
-      color: 'bg-orange-50 hover:bg-orange-100 text-orange-600 border-orange-200',
+      description: 'AI-powered suggestions',
+      color: isDark ? 'bg-orange-900/20 hover:bg-orange-900/30 text-orange-400 border-orange-800' : 'bg-orange-50 hover:bg-orange-100 text-orange-600 border-orange-200',
       action: 'Optimize Campaigns'
     },
     {
       icon: Calendar,
       title: 'Schedule Campaign',
-      description: 'Plan future campaign launches',
-      color: 'bg-pink-50 hover:bg-pink-100 text-pink-600 border-pink-200',
+      description: 'Plan future launches',
+      color: isDark ? 'bg-pink-900/20 hover:bg-pink-900/30 text-pink-400 border-pink-800' : 'bg-pink-50 hover:bg-pink-100 text-pink-600 border-pink-200',
       action: 'Schedule Campaign'
     },
     {
-      icon: Settings,
-      title: 'Settings',
-      description: 'Configure dashboard preferences',
-      color: 'bg-gray-50 hover:bg-gray-100 text-gray-600 border-gray-200',
-      action: 'Settings'
+      icon: TrendingUp,
+      title: 'View Analytics',
+      description: 'Real-time insights',
+      color: isDark ? 'bg-indigo-900/20 hover:bg-indigo-900/30 text-indigo-400 border-indigo-800' : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border-indigo-200',
+      action: 'View Analytics'
     }
   ];
 
   return (
-    <Card>
+    <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
+        <CardTitle className={`flex items-center space-x-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
           <Zap className="w-5 h-5" />
           <span>Quick Actions</span>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
           Common tasks and shortcuts to boost your productivity
         </CardDescription>
       </CardHeader>
@@ -83,14 +86,20 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
               key={index}
               variant="outline"
               onClick={() => onAction(action.action)}
-              className={`h-auto p-4 flex flex-col items-center space-y-3 ${action.color} hover:shadow-md transition-all duration-200 hover:scale-105`}
+              className={`h-auto p-4 flex flex-col items-center justify-center space-y-3 ${action.color} hover:shadow-md transition-all duration-200 hover:scale-105 min-h-[120px]`}
             >
-              <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center">
-                <action.icon className="w-5 h-5" />
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                isDark ? 'bg-gray-700 shadow-sm' : 'bg-white shadow-sm'
+              }`}>
+                <action.icon className="w-6 h-6" />
               </div>
-              <div className="text-center">
-                <div className="font-medium text-sm leading-tight">{action.title}</div>
-                <div className="text-xs opacity-70 mt-1 leading-tight">{action.description}</div>
+              <div className="text-center space-y-1">
+                <div className="font-medium text-sm leading-tight whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+                  {action.title}
+                </div>
+                <div className="text-xs opacity-70 leading-tight whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+                  {action.description}
+                </div>
               </div>
             </Button>
           ))}

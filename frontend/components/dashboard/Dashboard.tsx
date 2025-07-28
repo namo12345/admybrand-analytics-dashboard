@@ -1,22 +1,24 @@
 // Component Type: Hybrid (AI structure + manual enhancements)
-// Main dashboard component with AI assistant integration
+// Main dashboard component with routing between analytics and management views
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../layout/DashboardLayout';
-import KPICards from './KPICards';
+import AnalyticsView from './AnalyticsView';
 import CampaignTable from './CampaignTable';
 import InventoryTable from './InventoryTable';
 import AIAssistant from './AIAssistant';
 import QuickActions from './QuickActions';
-import RecentActivity from './RecentActivity';
 import CreateCampaignModal from './modals/CreateCampaignModal';
 import ImportDataModal from './modals/ImportDataModal';
 import SettingsModal from './modals/SettingsModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Bot, BarChart3, Package, Activity, Zap } from 'lucide-react';
-import { User } from '../App';
+import { Bot, BarChart3, Package, Zap, Eye, Settings as SettingsIcon } from 'lucide-react';
+import { User } from '../../App';
+import { useTheme } from '../providers/ThemeProvider';
+import { campaignService, inventoryService } from '../../lib/supabase';
+import { useToast } from '@/components/ui/use-toast';
 
 interface DashboardProps {
   user: User;
@@ -26,10 +28,53 @@ interface DashboardProps {
 
 export default function Dashboard({ user, onNavigateToHero, onLogout }: DashboardProps) {
   const [showAIAssistant, setShowAIAssistant] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('analytics');
   const [showCreateCampaign, setShowCreateCampaign] = useState(false);
   const [showImportData, setShowImportData] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [campaigns, setCampaigns] = useState([]);
+  const [inventory, setInventory] = useState([]);
+  const { isDark } = useTheme();
+  const { toast } = useToast();
+
+  // Load real-time data
+  useEffect(() => {
+    loadData();
+    
+    // Set up real-time subscriptions
+    const campaignSubscription = campaignService.subscribe((payload) => {
+      console.log('Campaign update:', payload);
+      loadData(); // Reload data on changes
+    });
+
+    const inventorySubscription = inventoryService.subscribe((payload) => {
+      console.log('Inventory update:', payload);
+      loadData(); // Reload data on changes
+    });
+
+    return () => {
+      campaignSubscription.unsubscribe();
+      inventorySubscription.unsubscribe();
+    };
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [campaignData, inventoryData] = await Promise.all([
+        campaignService.getAll(),
+        inventoryService.getAll()
+      ]);
+      setCampaigns(campaignData);
+      setInventory(inventoryData);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast({
+        title: "Error loading data",
+        description: "Failed to load dashboard data. Using demo data.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleQuickAction = (action: string) => {
     switch (action) {
@@ -43,23 +88,40 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
         setShowSettings(true);
         break;
       case 'Generate Report':
-        // This would trigger report generation
-        console.log('Generating report...');
+        toast({
+          title: "Generating report",
+          description: "Your performance report is being generated...",
+        });
         break;
       case 'Optimize Campaigns':
         setShowAIAssistant(true);
         break;
       case 'Schedule Campaign':
-        // This would open campaign scheduler
-        console.log('Opening campaign scheduler...');
+        toast({
+          title: "Campaign scheduler",
+          description: "Campaign scheduling feature coming soon!",
+        });
+        break;
+      case 'View Analytics':
+        setActiveTab('analytics');
         break;
       default:
         console.log(`Action: ${action}`);
     }
   };
 
+  const handleCampaignCreated = () => {
+    loadData(); // Reload data after creating campaign
+    setShowCreateCampaign(false);
+  };
+
+  const handleDataImported = () => {
+    loadData(); // Reload data after importing
+    setShowImportData(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <DashboardLayout user={user} onNavigateToHero={onNavigateToHero} onLogout={onLogout}>
         <div className="space-y-8">
           {/* Welcome Section */}
@@ -81,18 +143,15 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
             </div>
           </div>
 
-          {/* KPI Summary Cards */}
-          <KPICards />
-
           {/* Quick Actions */}
           <QuickActions onAction={handleQuickAction} />
 
           {/* Main Content Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4">
-              <TabsTrigger value="overview" className="flex items-center space-x-2">
+            <TabsList className={`grid w-full grid-cols-3 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+              <TabsTrigger value="analytics" className="flex items-center space-x-2">
                 <BarChart3 className="w-4 h-4" />
-                <span>Overview</span>
+                <span>Analytics</span>
               </TabsTrigger>
               <TabsTrigger value="campaigns" className="flex items-center space-x-2">
                 <Zap className="w-4 h-4" />
@@ -102,130 +161,42 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
                 <Package className="w-4 h-4" />
                 <span>Inventory</span>
               </TabsTrigger>
-              <TabsTrigger value="activity" className="flex items-center space-x-2">
-                <Activity className="w-4 h-4" />
-                <span>Activity</span>
-              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="overview" className="space-y-6">
-              <div className="grid lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Campaign Performance Chart Placeholder */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Campaign Performance Trends</CardTitle>
-                      <CardDescription>
-                        Track your campaign metrics over time
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-64 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
-                        <div className="text-center">
-                          <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-500">Interactive charts coming soon</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Top Campaigns Preview */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Top Performing Campaigns</CardTitle>
-                      <CardDescription>
-                        Your best campaigns this month
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[
-                          { name: 'Summer Fashion Campaign', roi: '5.2x', spend: '$35,000' },
-                          { name: 'TV Prime Time Spots', roi: '4.1x', spend: '$120,000' },
-                          { name: 'Digital Display Network', roi: '3.7x', spend: '$60,000' }
-                        ].map((campaign, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                              <p className="font-medium text-gray-900">{campaign.name}</p>
-                              <p className="text-sm text-gray-500">Spend: {campaign.spend}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-green-600">{campaign.roi}</p>
-                              <p className="text-xs text-gray-500">ROI</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="space-y-6">
-                  <RecentActivity />
-                </div>
-              </div>
+            <TabsContent value="analytics">
+              <AnalyticsView />
             </TabsContent>
 
             <TabsContent value="campaigns">
-              <Card>
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
                 <CardHeader>
-                  <CardTitle>Campaign Management</CardTitle>
-                  <CardDescription>
+                  <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+                    Campaign Management
+                  </CardTitle>
+                  <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
                     Monitor and manage your advertising campaigns
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <CampaignTable />
+                  <CampaignTable data={campaigns} onDataChange={loadData} />
                 </CardContent>
               </Card>
             </TabsContent>
 
             <TabsContent value="inventory">
-              <Card>
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
                 <CardHeader>
-                  <CardTitle>Ad Inventory</CardTitle>
-                  <CardDescription>
+                  <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+                    Ad Inventory
+                  </CardTitle>
+                  <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
                     Browse and manage available advertising inventory
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <InventoryTable />
+                  <InventoryTable data={inventory} onDataChange={loadData} />
                 </CardContent>
               </Card>
-            </TabsContent>
-
-            <TabsContent value="activity">
-              <div className="grid lg:grid-cols-2 gap-6">
-                <RecentActivity />
-                <Card>
-                  <CardHeader>
-                    <CardTitle>System Notifications</CardTitle>
-                    <CardDescription>
-                      Important updates and alerts
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {[
-                        { type: 'success', message: 'Campaign "Summer Fashion" exceeded ROI target', time: '2 hours ago' },
-                        { type: 'warning', message: 'Budget alert: "Radio Morning Drive" at 85% spend', time: '4 hours ago' },
-                        { type: 'info', message: 'New inventory available in Times Square', time: '6 hours ago' }
-                      ].map((notification, index) => (
-                        <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                          <div className={`w-2 h-2 rounded-full mt-2 ${
-                            notification.type === 'success' ? 'bg-green-500' :
-                            notification.type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
-                          }`}></div>
-                          <div className="flex-1">
-                            <p className="text-sm text-gray-900">{notification.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
             </TabsContent>
           </Tabs>
         </div>
@@ -237,11 +208,17 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
       )}
       
       {showCreateCampaign && (
-        <CreateCampaignModal onClose={() => setShowCreateCampaign(false)} />
+        <CreateCampaignModal 
+          onClose={() => setShowCreateCampaign(false)}
+          onSuccess={handleCampaignCreated}
+        />
       )}
       
       {showImportData && (
-        <ImportDataModal onClose={() => setShowImportData(false)} />
+        <ImportDataModal 
+          onClose={() => setShowImportData(false)}
+          onSuccess={handleDataImported}
+        />
       )}
       
       {showSettings && (
