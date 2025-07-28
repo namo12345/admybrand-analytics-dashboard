@@ -1,5 +1,5 @@
 // Component Type: Manual
-// Settings modal for dashboard configuration
+// Settings modal for dashboard configuration - Fixed for white theme and functionality
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { X, Settings, User, Bell, Shield, Palette } from 'lucide-react';
-import { User as UserType } from '../../App';
+import { User as UserType } from '../../../App';
 
 interface SettingsModalProps {
   user: UserType;
@@ -34,7 +34,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
     
     // Dashboard settings
     theme: 'light',
-    defaultView: 'overview',
+    defaultView: 'analytics',
     itemsPerPage: '10',
     autoRefresh: true,
     
@@ -77,14 +77,14 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b">
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden bg-white border-gray-200">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center">
               <Settings className="w-5 h-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-lg">Settings</CardTitle>
+              <CardTitle className="text-lg text-gray-900">Settings</CardTitle>
               <p className="text-sm text-gray-500">Manage your account and preferences</p>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
 
         <CardContent className="p-0">
           <Tabs defaultValue="profile" className="h-[600px]">
-            <TabsList className="grid w-full grid-cols-4 rounded-none border-b">
+            <TabsList className="grid w-full grid-cols-4 rounded-none border-b bg-gray-50">
               <TabsTrigger value="profile" className="flex items-center space-x-2">
                 <User className="w-4 h-4" />
                 <span>Profile</span>
@@ -117,46 +117,49 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
             <div className="overflow-y-auto h-[500px]">
               <TabsContent value="profile" className="p-6 space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Profile Information</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Profile Information</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
+                      <Label htmlFor="name" className="text-gray-700">Full Name</Label>
                       <Input
                         id="name"
                         value={settings.name}
                         onChange={(e) => updateSetting('name', e.target.value)}
+                        className="bg-white border-gray-300"
                       />
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
+                      <Label htmlFor="email" className="text-gray-700">Email Address</Label>
                       <Input
                         id="email"
                         type="email"
                         value={settings.email}
                         onChange={(e) => updateSetting('email', e.target.value)}
+                        className="bg-white border-gray-300"
                       />
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="role">Role</Label>
+                      <Label htmlFor="role" className="text-gray-700">Role</Label>
                       <Input
                         id="role"
                         value={settings.role}
                         onChange={(e) => updateSetting('role', e.target.value)}
+                        className="bg-white border-gray-300"
                       />
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="timezone">Timezone</Label>
+                      <Label htmlFor="timezone" className="text-gray-700">Timezone</Label>
                       <Select value={settings.timezone} onValueChange={(value) => updateSetting('timezone', value)}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white border-gray-300">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white border-gray-300">
                           <SelectItem value="UTC-8">Pacific Time (UTC-8)</SelectItem>
                           <SelectItem value="UTC-7">Mountain Time (UTC-7)</SelectItem>
                           <SelectItem value="UTC-6">Central Time (UTC-6)</SelectItem>
@@ -171,12 +174,12 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
 
               <TabsContent value="notifications" className="p-6 space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Notification Preferences</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Notification Preferences</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="email-notifications">Email Notifications</Label>
+                        <Label htmlFor="email-notifications" className="text-gray-700">Email Notifications</Label>
                         <p className="text-sm text-gray-500">Receive updates via email</p>
                       </div>
                       <Switch
@@ -188,7 +191,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="push-notifications">Push Notifications</Label>
+                        <Label htmlFor="push-notifications" className="text-gray-700">Push Notifications</Label>
                         <p className="text-sm text-gray-500">Browser push notifications</p>
                       </div>
                       <Switch
@@ -200,7 +203,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="weekly-reports">Weekly Reports</Label>
+                        <Label htmlFor="weekly-reports" className="text-gray-700">Weekly Reports</Label>
                         <p className="text-sm text-gray-500">Receive weekly performance summaries</p>
                       </div>
                       <Switch
@@ -212,7 +215,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="budget-alerts">Budget Alerts</Label>
+                        <Label htmlFor="budget-alerts" className="text-gray-700">Budget Alerts</Label>
                         <p className="text-sm text-gray-500">Alerts when campaigns reach budget limits</p>
                       </div>
                       <Switch
@@ -227,46 +230,45 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
 
               <TabsContent value="dashboard" className="p-6 space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Dashboard Preferences</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Dashboard Preferences</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="theme">Theme</Label>
+                      <Label htmlFor="theme" className="text-gray-700">Theme</Label>
                       <Select value={settings.theme} onValueChange={(value) => updateSetting('theme', value)}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white border-gray-300">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white border-gray-300">
                           <SelectItem value="light">Light</SelectItem>
-                          <SelectItem value="dark">Dark</SelectItem>
-                          <SelectItem value="auto">Auto</SelectItem>
+                          <SelectItem value="dark" disabled>Dark (Coming Soon)</SelectItem>
+                          <SelectItem value="auto" disabled>Auto (Coming Soon)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="default-view">Default View</Label>
+                      <Label htmlFor="default-view" className="text-gray-700">Default View</Label>
                       <Select value={settings.defaultView} onValueChange={(value) => updateSetting('defaultView', value)}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white border-gray-300">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="overview">Overview</SelectItem>
+                        <SelectContent className="bg-white border-gray-300">
+                          <SelectItem value="analytics">Analytics</SelectItem>
                           <SelectItem value="campaigns">Campaigns</SelectItem>
                           <SelectItem value="inventory">Inventory</SelectItem>
-                          <SelectItem value="activity">Activity</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="items-per-page">Items Per Page</Label>
+                    <Label htmlFor="items-per-page" className="text-gray-700">Items Per Page</Label>
                     <Select value={settings.itemsPerPage} onValueChange={(value) => updateSetting('itemsPerPage', value)}>
-                      <SelectTrigger className="w-32">
+                      <SelectTrigger className="w-32 bg-white border-gray-300">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white border-gray-300">
                         <SelectItem value="5">5</SelectItem>
                         <SelectItem value="10">10</SelectItem>
                         <SelectItem value="25">25</SelectItem>
@@ -277,7 +279,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
                   
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label htmlFor="auto-refresh">Auto Refresh</Label>
+                      <Label htmlFor="auto-refresh" className="text-gray-700">Auto Refresh</Label>
                       <p className="text-sm text-gray-500">Automatically refresh data every 5 minutes</p>
                     </div>
                     <Switch
@@ -291,12 +293,12 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
 
               <TabsContent value="privacy" className="p-6 space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Privacy & Security</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Privacy & Security</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="data-sharing">Data Sharing</Label>
+                        <Label htmlFor="data-sharing" className="text-gray-700">Data Sharing</Label>
                         <p className="text-sm text-gray-500">Share anonymized data for product improvement</p>
                       </div>
                       <Switch
@@ -308,7 +310,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="analytics">Analytics</Label>
+                        <Label htmlFor="analytics" className="text-gray-700">Analytics</Label>
                         <p className="text-sm text-gray-500">Allow usage analytics collection</p>
                       </div>
                       <Switch
@@ -320,7 +322,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="cookies">Cookies</Label>
+                        <Label htmlFor="cookies" className="text-gray-700">Cookies</Label>
                         <p className="text-sm text-gray-500">Accept non-essential cookies</p>
                       </div>
                       <Switch
@@ -334,7 +336,7 @@ export default function SettingsModal({ user, onClose }: SettingsModalProps) {
               </TabsContent>
             </div>
 
-            <div className="flex justify-end space-x-3 p-6 border-t">
+            <div className="flex justify-end space-x-3 p-6 border-t border-gray-200">
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>

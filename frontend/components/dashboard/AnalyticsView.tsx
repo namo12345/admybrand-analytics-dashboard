@@ -1,5 +1,5 @@
 // Component Type: Manual
-// Main analytics view with real-time charts and KPIs - Fixed visibility issues
+// Main analytics view with real-time charts and KPIs - Fixed for white theme
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +23,6 @@ import MediaTypeChart from '../charts/MediaTypeChart';
 import ROIChart from '../charts/ROIChart';
 import { analyticsService } from '../../lib/supabase';
 import { formatCurrency, formatNumber } from '../../lib/utils';
-import { useTheme } from '../providers/ThemeProvider';
 
 export default function AnalyticsView() {
   const [kpis, setKpis] = useState({
@@ -37,7 +36,6 @@ export default function AnalyticsView() {
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const { toast } = useToast();
-  const { isDark } = useTheme();
 
   const loadAnalyticsData = async () => {
     try {
@@ -55,7 +53,6 @@ export default function AnalyticsView() {
       setLastUpdated(new Date());
     } catch (error) {
       console.error('Error loading analytics:', error);
-      // Don't show error toast, just use fallback data
       console.log('Using fallback analytics data');
     } finally {
       setIsLoading(false);
@@ -140,15 +137,15 @@ export default function AnalyticsView() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+          <h1 className="text-3xl font-bold text-gray-900">
             Analytics Dashboard
           </h1>
-          <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'} mt-2`}>
+          <p className="text-lg text-gray-600 mt-2">
             Real-time campaign performance and insights
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'} flex items-center space-x-2`}>
+          <div className="text-sm text-gray-500 flex items-center space-x-2">
             <Calendar className="w-4 h-4" />
             <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
           </div>
@@ -166,20 +163,18 @@ export default function AnalyticsView() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpiCards.map((kpi, index) => (
-          <Card key={index} className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow-sm hover:shadow-md transition-shadow`}>
+          <Card key={index} className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    isDark ? 'bg-blue-900/50' : 'bg-blue-50'
-                  }`}>
-                    <kpi.icon className={`w-5 h-5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50">
+                    <kpi.icon className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className="text-sm font-medium text-gray-600">
                       {kpi.title}
                     </p>
-                    <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    <p className="text-2xl font-bold text-gray-900">
                       {kpi.value}
                     </p>
                   </div>
@@ -189,7 +184,7 @@ export default function AnalyticsView() {
                 <Badge variant={kpi.changeType === 'positive' ? 'default' : 'destructive'} className="text-xs">
                   {kpi.change}
                 </Badge>
-                <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                <span className="text-sm text-gray-500">
                   {kpi.description}
                 </span>
               </div>
@@ -200,35 +195,35 @@ export default function AnalyticsView() {
 
       {/* Charts */}
       <Tabs defaultValue="performance" className="space-y-6">
-        <TabsList className={`grid w-full grid-cols-3 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-100'}`}>
-          <TabsTrigger value="performance" className={`flex items-center space-x-2 ${isDark ? 'data-[state=active]:bg-gray-700 data-[state=active]:text-white' : ''}`}>
+        <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+          <TabsTrigger value="performance" className="flex items-center space-x-2">
             <BarChart3 className="w-4 h-4" />
             <span>Performance</span>
           </TabsTrigger>
-          <TabsTrigger value="media-types" className={`flex items-center space-x-2 ${isDark ? 'data-[state=active]:bg-gray-700 data-[state=active]:text-white' : ''}`}>
+          <TabsTrigger value="media-types" className="flex items-center space-x-2">
             <Target className="w-4 h-4" />
             <span>Media Types</span>
           </TabsTrigger>
-          <TabsTrigger value="roi" className={`flex items-center space-x-2 ${isDark ? 'data-[state=active]:bg-gray-700 data-[state=active]:text-white' : ''}`}>
+          <TabsTrigger value="roi" className="flex items-center space-x-2">
             <TrendingUp className="w-4 h-4" />
             <span>ROI Analysis</span>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="performance">
-          <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+              <CardTitle className="text-gray-900">
                 Campaign Performance Trends
               </CardTitle>
-              <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+              <CardDescription className="text-gray-600">
                 Track budget, impressions, and ROI across all campaigns
               </CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <div className="h-80 flex items-center justify-center">
-                  <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${isDark ? 'border-blue-400' : 'border-blue-600'}`}></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 </div>
               ) : (
                 <PerformanceChart data={performanceData} />
@@ -238,19 +233,19 @@ export default function AnalyticsView() {
         </TabsContent>
 
         <TabsContent value="media-types">
-          <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+              <CardTitle className="text-gray-900">
                 Media Type Breakdown
               </CardTitle>
-              <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+              <CardDescription className="text-gray-600">
                 Budget allocation and performance by media type
               </CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <div className="h-80 flex items-center justify-center">
-                  <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${isDark ? 'border-blue-400' : 'border-blue-600'}`}></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 </div>
               ) : (
                 <MediaTypeChart data={mediaTypeData} />
@@ -260,19 +255,19 @@ export default function AnalyticsView() {
         </TabsContent>
 
         <TabsContent value="roi">
-          <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+              <CardTitle className="text-gray-900">
                 ROI Analysis
               </CardTitle>
-              <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+              <CardDescription className="text-gray-600">
                 Top performing campaigns by return on investment
               </CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <div className="h-80 flex items-center justify-center">
-                  <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${isDark ? 'border-blue-400' : 'border-blue-600'}`}></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 </div>
               ) : (
                 <ROIChart data={performanceData} />
@@ -283,16 +278,16 @@ export default function AnalyticsView() {
       </Tabs>
 
       {/* Real-time Status */}
-      <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
+      <Card className="bg-white border-gray-200">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+              <span className="text-sm text-gray-600">
                 Real-time data updates every 30 seconds
               </span>
             </div>
-            <Badge variant="outline" className={isDark ? 'border-gray-600 text-gray-300' : ''}>
+            <Badge variant="outline">
               Live Analytics
             </Badge>
           </div>

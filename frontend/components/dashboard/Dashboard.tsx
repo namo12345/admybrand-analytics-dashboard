@@ -1,5 +1,5 @@
 // Component Type: Hybrid (AI structure + manual enhancements)
-// Main dashboard component with routing between analytics and management views - Fixed visibility
+// Main dashboard component with routing between analytics and management views - Fixed for white theme
 
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../layout/DashboardLayout';
@@ -16,7 +16,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, BarChart3, Package, Zap } from 'lucide-react';
 import { User } from '../../App';
-import { useTheme } from '../providers/ThemeProvider';
 import { campaignService, inventoryService } from '../../lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
 import { Campaign, Inventory } from '../../lib/types';
@@ -35,7 +34,6 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
   const [showSettings, setShowSettings] = useState(false);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [inventory, setInventory] = useState<Inventory[]>([]);
-  const { isDark } = useTheme();
   const { toast } = useToast();
 
   const loadData = async () => {
@@ -91,9 +89,6 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
       case 'Import Data':
         setShowImportData(true);
         break;
-      case 'Settings':
-        setShowSettings(true);
-        break;
       case 'Generate Report':
         toast({
           title: "Generating report",
@@ -137,8 +132,13 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
   };
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <DashboardLayout user={user} onNavigateToHero={onNavigateToHero} onLogout={onLogout}>
+    <div className="min-h-screen bg-gray-50">
+      <DashboardLayout 
+        user={user} 
+        onNavigateToHero={onNavigateToHero} 
+        onLogout={onLogout}
+        onOpenSettings={() => setShowSettings(true)}
+      >
         <div className="space-y-8">
           {/* Welcome Section */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
@@ -164,16 +164,16 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
 
           {/* Main Content Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className={`grid w-full grid-cols-3 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-100'}`}>
-              <TabsTrigger value="analytics" className={`flex items-center space-x-2 ${isDark ? 'data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300' : ''}`}>
+            <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+              <TabsTrigger value="analytics" className="flex items-center space-x-2">
                 <BarChart3 className="w-4 h-4" />
                 <span>Analytics</span>
               </TabsTrigger>
-              <TabsTrigger value="campaigns" className={`flex items-center space-x-2 ${isDark ? 'data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300' : ''}`}>
+              <TabsTrigger value="campaigns" className="flex items-center space-x-2">
                 <Zap className="w-4 h-4" />
                 <span>Campaigns</span>
               </TabsTrigger>
-              <TabsTrigger value="inventory" className={`flex items-center space-x-2 ${isDark ? 'data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300' : ''}`}>
+              <TabsTrigger value="inventory" className="flex items-center space-x-2">
                 <Package className="w-4 h-4" />
                 <span>Inventory</span>
               </TabsTrigger>
@@ -184,12 +184,12 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
             </TabsContent>
 
             <TabsContent value="campaigns">
-              <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
+              <Card className="bg-white border-gray-200">
                 <CardHeader>
-                  <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+                  <CardTitle className="text-gray-900">
                     Campaign Management
                   </CardTitle>
-                  <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                  <CardDescription className="text-gray-600">
                     Monitor and manage your advertising campaigns
                   </CardDescription>
                 </CardHeader>
@@ -200,12 +200,12 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
             </TabsContent>
 
             <TabsContent value="inventory">
-              <Card className={isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}>
+              <Card className="bg-white border-gray-200">
                 <CardHeader>
-                  <CardTitle className={isDark ? 'text-white' : 'text-gray-900'}>
+                  <CardTitle className="text-gray-900">
                     Ad Inventory
                   </CardTitle>
-                  <CardDescription className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                  <CardDescription className="text-gray-600">
                     Browse and manage available advertising inventory
                   </CardDescription>
                 </CardHeader>

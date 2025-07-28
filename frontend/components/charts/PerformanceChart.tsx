@@ -1,5 +1,5 @@
 // Component Type: Manual
-// Interactive performance chart component
+// Interactive performance chart component - Fixed for white theme
 
 import React from 'react';
 import {
@@ -12,7 +12,6 @@ import {
   ResponsiveContainer,
   Legend
 } from 'recharts';
-import { useTheme } from '../providers/ThemeProvider';
 
 interface PerformanceChartProps {
   data: Array<{
@@ -26,8 +25,6 @@ interface PerformanceChartProps {
 }
 
 export default function PerformanceChart({ data }: PerformanceChartProps) {
-  const { isDark } = useTheme();
-
   const chartData = data.map(item => ({
     name: item.name.length > 15 ? item.name.substring(0, 15) + '...' : item.name,
     budget: item.budget / 1000, // Convert to thousands
@@ -37,19 +34,17 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
   }));
 
   const colors = {
-    budget: isDark ? '#60a5fa' : '#3b82f6',
-    impressions: isDark ? '#34d399' : '#10b981',
-    clicks: isDark ? '#fbbf24' : '#f59e0b',
-    roi: isDark ? '#f87171' : '#ef4444'
+    budget: '#3b82f6',
+    impressions: '#10b981',
+    clicks: '#f59e0b',
+    roi: '#ef4444'
   };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className={`p-3 rounded-lg border shadow-lg ${
-          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-        }`}>
-          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-3 rounded-lg border shadow-lg bg-white border-gray-200">
+          <p className="font-medium text-gray-900">
             {label}
           </p>
           {payload.map((entry: any, index: number) => (
@@ -72,15 +67,15 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 
-            stroke={isDark ? '#374151' : '#e5e7eb'} 
+            stroke="#e5e7eb" 
           />
           <XAxis 
             dataKey="name" 
-            stroke={isDark ? '#9ca3af' : '#6b7280'}
+            stroke="#6b7280"
             fontSize={12}
           />
           <YAxis 
-            stroke={isDark ? '#9ca3af' : '#6b7280'}
+            stroke="#6b7280"
             fontSize={12}
           />
           <Tooltip content={<CustomTooltip />} />

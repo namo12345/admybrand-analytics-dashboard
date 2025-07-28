@@ -1,5 +1,5 @@
 // Component Type: Manual
-// Interactive media type breakdown chart
+// Interactive media type breakdown chart - Fixed for white theme
 
 import React from 'react';
 import {
@@ -10,7 +10,6 @@ import {
   Tooltip,
   Legend
 } from 'recharts';
-import { useTheme } from '../providers/ThemeProvider';
 
 interface MediaTypeChartProps {
   data: Array<{
@@ -23,8 +22,6 @@ interface MediaTypeChartProps {
 }
 
 export default function MediaTypeChart({ data }: MediaTypeChartProps) {
-  const { isDark } = useTheme();
-
   const COLORS = [
     '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'
   ];
@@ -41,19 +38,17 @@ export default function MediaTypeChart({ data }: MediaTypeChartProps) {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className={`p-3 rounded-lg border shadow-lg ${
-          isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-        }`}>
-          <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-3 rounded-lg border shadow-lg bg-white border-gray-200">
+          <p className="font-medium text-gray-900">
             {data.name}
           </p>
           <p className="text-sm" style={{ color: data.color }}>
             Budget: ${data.value.toLocaleString()}
           </p>
-          <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className="text-sm text-gray-600">
             Campaigns: {data.campaigns}
           </p>
-          <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className="text-sm text-gray-600">
             Avg ROI: {data.averageROI.toFixed(1)}x
           </p>
         </div>
@@ -74,7 +69,7 @@ export default function MediaTypeChart({ data }: MediaTypeChartProps) {
       <text 
         x={x} 
         y={y} 
-        fill={isDark ? '#ffffff' : '#000000'} 
+        fill="#000000" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
         fontSize={12}
@@ -106,7 +101,7 @@ export default function MediaTypeChart({ data }: MediaTypeChartProps) {
           <Tooltip content={<CustomTooltip />} />
           <Legend 
             wrapperStyle={{ 
-              color: isDark ? '#e5e7eb' : '#374151',
+              color: '#374151',
               fontSize: '14px'
             }}
           />

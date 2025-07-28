@@ -1,5 +1,5 @@
 // Component Type: Manual
-// Theme provider for dark mode support
+// Theme provider for dark mode support - Fixed to default to light theme
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Theme, ThemeContextType, getSystemTheme, applyTheme } from '../../lib/theme';
@@ -23,44 +23,30 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Load theme from localStorage
+    // Always default to light theme
     const savedTheme = localStorage.getItem('admybrand-theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
+    if (savedTheme && savedTheme === 'dark') {
+      // Override any saved dark theme to light
+      setTheme('light');
+      localStorage.setItem('admybrand-theme', 'light');
+    } else {
+      setTheme('light');
     }
   }, []);
 
   useEffect(() => {
-    // Apply theme and update isDark state
-    const systemTheme = getSystemTheme();
-    const actualTheme = theme === 'system' ? systemTheme : theme;
-    
-    setIsDark(actualTheme === 'dark');
-    applyTheme(theme);
+    // Always apply light theme
+    setIsDark(false);
+    applyTheme('light');
     
     // Save to localStorage
-    localStorage.setItem('admybrand-theme', theme);
-  }, [theme]);
-
-  useEffect(() => {
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      if (theme === 'system') {
-        const systemTheme = getSystemTheme();
-        setIsDark(systemTheme === 'dark');
-        applyTheme(theme);
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    localStorage.setItem('admybrand-theme', 'light');
   }, [theme]);
 
   const value: ThemeContextType = {
-    theme,
-    setTheme,
-    isDark
+    theme: 'light',
+    setTheme: () => {}, // Disable theme switching
+    isDark: false
   };
 
   return (

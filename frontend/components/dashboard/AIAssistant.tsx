@@ -1,5 +1,5 @@
 // Component Type: Manual
-// AI Assistant component for interactive help and insights
+// AI Assistant component for interactive help and insights - Optimized responses
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -40,10 +40,10 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
       content: "Hi! I'm your AI assistant. I can help you analyze campaign performance, optimize budgets, and provide insights. What would you like to know?",
       timestamp: new Date(),
       suggestions: [
-        "Show me top performing campaigns",
+        "Show top performing campaigns",
         "How can I improve ROI?",
         "Analyze budget allocation",
-        "Suggest campaign optimizations"
+        "Campaign optimization tips"
       ]
     }
   ]);
@@ -93,19 +93,19 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
     let suggestions: string[] = [];
 
     if (input.includes('performance') || input.includes('top')) {
-      response = "Based on your current data, your top 3 campaigns are:\n\n1. **Social Media Blitz** - 5.2x ROI, $35K spend\n2. **TV Prime Time Spots** - 4.1x ROI, $120K spend\n3. **Digital Display Network** - 3.7x ROI, $60K spend\n\nThe Social Media campaign is performing exceptionally well due to high engagement rates and precise targeting.";
-      suggestions = ["How to scale Social Media campaign?", "Compare channel performance", "Budget reallocation suggestions"];
+      response = "Based on your current data, here are your top 3 campaigns:\n\n• Social Media Blitz - 5.2x ROI, $35K spend\n• TV Prime Time Spots - 4.1x ROI, $120K spend  \n• Digital Display Network - 3.7x ROI, $60K spend\n\nThe Social Media campaign excels due to high engagement and precise targeting.";
+      suggestions = ["Scale Social Media campaign", "Compare channel performance", "Budget reallocation tips"];
     } else if (input.includes('roi') || input.includes('improve')) {
-      response = "Here are 3 key strategies to improve your ROI:\n\n🎯 **Audience Refinement**: Your Digital campaigns show 40% better performance with 25-34 age group\n\n📊 **Budget Optimization**: Shift 15% budget from Radio to Social for potential 2.1x ROI increase\n\n⏰ **Timing Optimization**: TV campaigns perform 60% better during 7-9 PM slots";
-      suggestions = ["Show audience insights", "Create budget optimization plan", "Analyze timing patterns"];
+      response = "Here are 3 key strategies to improve your ROI:\n\n🎯 Audience Refinement: Digital campaigns show 40% better performance with 25-34 age group\n\n📊 Budget Optimization: Shift 15% budget from Radio to Social for potential 2.1x ROI increase\n\n⏰ Timing Optimization: TV campaigns perform 60% better during 7-9 PM slots";
+      suggestions = ["Show audience insights", "Create optimization plan", "Analyze timing patterns"];
     } else if (input.includes('budget') || input.includes('allocation')) {
-      response = "Your current budget allocation analysis:\n\n💰 **Total Budget**: $405K\n📈 **Best Performing**: Social (5.2x ROI) - Consider increasing by 25%\n⚠️ **Underperforming**: Radio (2.1x ROI) - Reduce by 20%\n🎯 **Opportunity**: Outdoor campaigns show potential for 15% budget increase";
-      suggestions = ["Apply budget recommendations", "See detailed breakdown", "Compare with industry benchmarks"];
+      response = "Your current budget allocation:\n\n💰 Total Budget: $405K\n📈 Best Performing: Social (5.2x ROI) - Consider +25% increase\n⚠️ Underperforming: Radio (2.1x ROI) - Reduce by 20%\n🎯 Opportunity: Outdoor campaigns show potential for 15% increase";
+      suggestions = ["Apply recommendations", "See detailed breakdown", "Compare with benchmarks"];
     } else if (input.includes('optimize') || input.includes('suggestions')) {
-      response = "🚀 **Optimization Recommendations**:\n\n1. **Increase Social Media budget** by $10K (projected +$52K revenue)\n2. **Pause Radio Morning Drive** campaign (low ROI)\n3. **Expand Digital Display** to mobile inventory\n4. **Test video creative** for TV campaigns\n5. **Geographic expansion** for Outdoor campaigns";
+      response = "🚀 Optimization Recommendations:\n\n1. Increase Social Media budget by $10K (projected +$52K revenue)\n2. Pause Radio Morning Drive campaign (low ROI)\n3. Expand Digital Display to mobile inventory\n4. Test video creative for TV campaigns\n5. Geographic expansion for Outdoor campaigns";
       suggestions = ["Implement recommendations", "See impact projections", "Schedule optimization"];
     } else {
-      response = "I can help you with campaign analysis, performance optimization, budget allocation, and strategic insights. What specific aspect of your advertising campaigns would you like to explore?";
+      response = "I can help you with campaign analysis, performance optimization, budget allocation, and strategic insights. What specific aspect would you like to explore?";
       suggestions = ["Campaign performance review", "ROI improvement strategies", "Budget optimization", "Market opportunities"];
     }
 
@@ -135,14 +135,14 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl h-[600px] flex flex-col">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b">
+      <Card className="w-full max-w-2xl h-[600px] flex flex-col bg-white border-gray-200">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-lg">AI Assistant</CardTitle>
+              <CardTitle className="text-lg text-gray-900">AI Assistant</CardTitle>
               <p className="text-sm text-gray-500">Powered by advanced analytics</p>
             </div>
           </div>
@@ -178,13 +178,13 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
             <div className="space-y-4">
               {messages.map((message) => (
                 <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                    <div className={`p-3 rounded-lg ${
+                  <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                    <div className={`p-3 rounded-lg break-words ${
                       message.type === 'user' 
                         ? 'bg-blue-600 text-white' 
                         : 'bg-gray-100 text-gray-900'
                     }`}>
-                      <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                      <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
                     </div>
                     
                     {message.suggestions && (
@@ -195,10 +195,10 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
                             variant="outline"
                             size="sm"
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="text-xs h-7 mr-1 mb-1"
+                            className="text-xs h-7 mr-1 mb-1 max-w-full"
                           >
-                            <Sparkles className="w-3 h-3 mr-1" />
-                            {suggestion}
+                            <Sparkles className="w-3 h-3 mr-1 flex-shrink-0" />
+                            <span className="truncate">{suggestion}</span>
                           </Button>
                         ))}
                       </div>
@@ -235,7 +235,7 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t">
+          <div className="p-4 border-t border-gray-200">
             <div className="flex space-x-2">
               <Input
                 value={inputValue}
