@@ -1,5 +1,5 @@
 // Component Type: Hybrid (AI structure + manual enhancements)
-// Campaign management table with sorting, filtering, and pagination
+// Campaign management table with sorting, filtering, and pagination - Fixed dark theme
 
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -13,9 +13,11 @@ import { formatCurrency, formatNumber, formatDate, formatROI, filterCampaigns, s
 import { useTableData } from '../../hooks/useTableData';
 import TableFilters from '../filters/TableFilters';
 import { useToast } from '@/components/ui/use-toast';
+import { useTheme } from '../providers/ThemeProvider';
 
 export default function CampaignTable() {
   const { toast } = useToast();
+  const { isDark } = useTheme();
 
   const {
     data,
@@ -114,20 +116,20 @@ export default function CampaignTable() {
       />
 
       {/* Table Controls */}
-      <div className="flex justify-between items-center px-6 py-4">
+      <div className={`flex justify-between items-center px-6 py-4 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600">
+          <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Showing {data.length} of {totalItems} campaigns
           </span>
           <Select value={pageSize.toString()} onValueChange={(value) => setPageSize(Number(value))}>
-            <SelectTrigger className="w-20">
+            <SelectTrigger className={`w-20 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
+            <SelectContent className={isDark ? 'bg-gray-700 border-gray-600' : ''}>
+              <SelectItem value="5" className={isDark ? 'text-white hover:bg-gray-600' : ''}>5</SelectItem>
+              <SelectItem value="10" className={isDark ? 'text-white hover:bg-gray-600' : ''}>10</SelectItem>
+              <SelectItem value="25" className={isDark ? 'text-white hover:bg-gray-600' : ''}>25</SelectItem>
+              <SelectItem value="50" className={isDark ? 'text-white hover:bg-gray-600' : ''}>50</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -142,9 +144,9 @@ export default function CampaignTable() {
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className={isDark ? 'border-gray-700' : ''}>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none"
+                className={`cursor-pointer select-none ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('name')}
               >
                 <div className="flex items-center space-x-1">
@@ -153,7 +155,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none"
+                className={`cursor-pointer select-none ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('mediaType')}
               >
                 <div className="flex items-center space-x-1">
@@ -162,7 +164,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none"
+                className={`cursor-pointer select-none ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('channel')}
               >
                 <div className="flex items-center space-x-1">
@@ -171,7 +173,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none"
+                className={`cursor-pointer select-none ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('startDate')}
               >
                 <div className="flex items-center space-x-1">
@@ -180,7 +182,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none"
+                className={`cursor-pointer select-none ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('endDate')}
               >
                 <div className="flex items-center space-x-1">
@@ -189,7 +191,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none"
+                className={`cursor-pointer select-none ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('status')}
               >
                 <div className="flex items-center space-x-1">
@@ -198,7 +200,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none text-right"
+                className={`cursor-pointer select-none text-right ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('budget')}
               >
                 <div className="flex items-center justify-end space-x-1">
@@ -207,7 +209,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none text-right"
+                className={`cursor-pointer select-none text-right ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('impressions')}
               >
                 <div className="flex items-center justify-end space-x-1">
@@ -216,7 +218,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none text-right"
+                className={`cursor-pointer select-none text-right ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('clicks')}
               >
                 <div className="flex items-center justify-end space-x-1">
@@ -225,7 +227,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none text-right"
+                className={`cursor-pointer select-none text-right ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('reach')}
               >
                 <div className="flex items-center justify-end space-x-1">
@@ -234,7 +236,7 @@ export default function CampaignTable() {
                 </div>
               </TableHead>
               <TableHead 
-                className="cursor-pointer hover:bg-gray-50 select-none text-right"
+                className={`cursor-pointer select-none text-right ${isDark ? 'text-gray-300 hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 onClick={() => handleSort('roi')}
               >
                 <div className="flex items-center justify-end space-x-1">
@@ -246,22 +248,22 @@ export default function CampaignTable() {
           </TableHeader>
           <TableBody>
             {data.map((campaign) => (
-              <TableRow key={campaign.id} className="hover:bg-gray-50">
-                <TableCell className="font-medium">{campaign.name}</TableCell>
-                <TableCell>{campaign.mediaType}</TableCell>
-                <TableCell>{campaign.channel}</TableCell>
-                <TableCell>{formatDate(campaign.startDate)}</TableCell>
-                <TableCell>{formatDate(campaign.endDate)}</TableCell>
+              <TableRow key={campaign.id} className={`${isDark ? 'border-gray-700 hover:bg-gray-700/50' : 'hover:bg-gray-50'}`}>
+                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{campaign.name}</TableCell>
+                <TableCell className={isDark ? 'text-gray-300' : ''}>{campaign.mediaType}</TableCell>
+                <TableCell className={isDark ? 'text-gray-300' : ''}>{campaign.channel}</TableCell>
+                <TableCell className={isDark ? 'text-gray-300' : ''}>{formatDate(campaign.startDate)}</TableCell>
+                <TableCell className={isDark ? 'text-gray-300' : ''}>{formatDate(campaign.endDate)}</TableCell>
                 <TableCell>
                   <Badge variant={getStatusBadgeVariant(campaign.status)}>
                     {campaign.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right">{formatCurrency(campaign.budget)}</TableCell>
-                <TableCell className="text-right">{formatNumber(campaign.impressions)}</TableCell>
-                <TableCell className="text-right">{formatNumber(campaign.clicks)}</TableCell>
-                <TableCell className="text-right">{formatNumber(campaign.reach)}</TableCell>
-                <TableCell className="text-right">{formatROI(campaign.roi)}</TableCell>
+                <TableCell className={`text-right ${isDark ? 'text-gray-300' : ''}`}>{formatCurrency(campaign.budget)}</TableCell>
+                <TableCell className={`text-right ${isDark ? 'text-gray-300' : ''}`}>{formatNumber(campaign.impressions)}</TableCell>
+                <TableCell className={`text-right ${isDark ? 'text-gray-300' : ''}`}>{formatNumber(campaign.clicks)}</TableCell>
+                <TableCell className={`text-right ${isDark ? 'text-gray-300' : ''}`}>{formatNumber(campaign.reach)}</TableCell>
+                <TableCell className={`text-right ${isDark ? 'text-gray-300' : ''}`}>{formatROI(campaign.roi)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -269,8 +271,8 @@ export default function CampaignTable() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-        <div className="text-sm text-gray-600">
+      <div className={`flex items-center justify-between px-6 py-4 border-t ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
+        <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
           Page {currentPage} of {totalPages}
         </div>
         <div className="flex items-center space-x-2">

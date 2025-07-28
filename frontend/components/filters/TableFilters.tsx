@@ -1,5 +1,5 @@
 // Component Type: Hybrid (AI structure + manual enhancements)
-// Comprehensive filter controls for tables
+// Comprehensive filter controls for tables - Fixed dark theme visibility
 
 import React from 'react';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { Search, Filter, X } from 'lucide-react';
 import { FilterState, MediaType, CampaignStatus, InventoryStatus } from '../../lib/types';
 import RangeFilter from './RangeFilter';
 import { formatCurrency } from '../../lib/utils';
+import { useTheme } from '../providers/ThemeProvider';
 
 interface TableFiltersProps {
   filters: FilterState;
@@ -17,6 +18,7 @@ interface TableFiltersProps {
 }
 
 export default function TableFilters({ filters, onFiltersChange, type }: TableFiltersProps) {
+  const { isDark } = useTheme();
   const mediaTypes: (MediaType | 'All')[] = ['All', 'Digital', 'Outdoor', 'TV', 'Radio', 'Print', 'Social'];
   
   const campaignStatuses: (CampaignStatus | 'All')[] = ['All', 'Active', 'Paused', 'Completed', 'Draft'];
@@ -45,16 +47,16 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
   };
 
   return (
-    <div className="bg-gray-50 border-b border-gray-200 p-4 space-y-4">
+    <div className={`border-b p-4 space-y-4 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
       {/* Search and Quick Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${isDark ? 'text-gray-400' : 'text-gray-400'}`} />
           <Input
             placeholder={`Search ${type === 'campaign' ? 'campaigns' : 'inventory'}...`}
             value={filters.search}
             onChange={(e) => onFiltersChange({ search: e.target.value })}
-            className="pl-10"
+            className={`pl-10 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : ''}`}
           />
         </div>
 
@@ -63,12 +65,12 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
             value={filters.mediaType}
             onValueChange={(value) => onFiltersChange({ mediaType: value as MediaType | 'All' })}
           >
-            <SelectTrigger className="w-full sm:w-48">
+            <SelectTrigger className={`w-full sm:w-48 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}>
               <SelectValue placeholder="Media Type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={isDark ? 'bg-gray-700 border-gray-600' : ''}>
               {mediaTypes.map((type) => (
-                <SelectItem key={type} value={type}>
+                <SelectItem key={type} value={type} className={isDark ? 'text-white hover:bg-gray-600' : ''}>
                   {type}
                 </SelectItem>
               ))}
@@ -80,12 +82,12 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
           value={filters.status}
           onValueChange={(value) => onFiltersChange({ status: value as CampaignStatus | InventoryStatus | 'All' })}
         >
-          <SelectTrigger className="w-full sm:w-48">
+          <SelectTrigger className={`w-full sm:w-48 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className={isDark ? 'bg-gray-700 border-gray-600' : ''}>
             {(type === 'campaign' ? campaignStatuses : inventoryStatuses).map((status) => (
-              <SelectItem key={status} value={status}>
+              <SelectItem key={status} value={status} className={isDark ? 'text-white hover:bg-gray-600' : ''}>
                 {status}
               </SelectItem>
             ))}
@@ -108,7 +110,7 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Date Range Filter */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Date Range</label>
+          <label className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Date Range</label>
           <div className="flex space-x-2">
             <Input
               type="date"
@@ -119,7 +121,7 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
                   start: e.target.value ? new Date(e.target.value) : null
                 }
               })}
-              className="text-sm"
+              className={`text-sm ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
             />
             <Input
               type="date"
@@ -130,7 +132,7 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
                   end: e.target.value ? new Date(e.target.value) : null
                 }
               })}
-              className="text-sm"
+              className={`text-sm ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
             />
           </div>
         </div>
@@ -162,7 +164,7 @@ export default function TableFilters({ filters, onFiltersChange, type }: TableFi
 
       {/* Filter Summary */}
       {hasActiveFilters && (
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
+        <div className={`flex items-center space-x-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
           <Filter className="w-4 h-4" />
           <span>Active filters applied</span>
         </div>

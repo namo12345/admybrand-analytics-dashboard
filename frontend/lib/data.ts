@@ -1,9 +1,9 @@
-// Component Type: AI-generated
-// Mock data for campaigns and inventory
+// Component Type: AI-generated + Manual enhancements
+// Enhanced mock data for campaigns and inventory with better chart visualization
 
 import { Campaign, Inventory, MediaType, CampaignStatus, InventoryStatus } from './types';
 
-// Generate mock campaigns
+// Enhanced mock campaigns with more data for better visualization
 export const mockCampaigns: Campaign[] = [
   {
     id: '1',
@@ -116,10 +116,67 @@ export const mockCampaigns: Campaign[] = [
     clicks: 0,
     reach: 780000,
     roi: 2.9
+  },
+  // Additional campaigns for better chart visualization
+  {
+    id: '9',
+    name: 'Holiday Shopping Campaign',
+    mediaType: 'Digital',
+    channel: 'Amazon Ads',
+    startDate: new Date('2024-11-01'),
+    endDate: new Date('2024-12-31'),
+    status: 'Active',
+    budget: 85000,
+    impressions: 2200000,
+    clicks: 55000,
+    reach: 1100000,
+    roi: 4.3
+  },
+  {
+    id: '10',
+    name: 'Podcast Sponsorship',
+    mediaType: 'Radio',
+    channel: 'Spotify Ad Studio',
+    startDate: new Date('2024-08-15'),
+    endDate: new Date('2024-10-15'),
+    status: 'Active',
+    budget: 30000,
+    impressions: 890000,
+    clicks: 12000,
+    reach: 520000,
+    roi: 3.1
+  },
+  {
+    id: '11',
+    name: 'Influencer Partnership',
+    mediaType: 'Social',
+    channel: 'Instagram',
+    startDate: new Date('2024-09-01'),
+    endDate: new Date('2024-11-01'),
+    status: 'Active',
+    budget: 42000,
+    impressions: 1350000,
+    clicks: 67000,
+    reach: 890000,
+    roi: 4.8
+  },
+  {
+    id: '12',
+    name: 'Cinema Advertising',
+    mediaType: 'Outdoor',
+    channel: 'AMC Theatres',
+    startDate: new Date('2024-10-01'),
+    endDate: new Date('2024-12-01'),
+    status: 'Active',
+    budget: 55000,
+    impressions: 1750000,
+    clicks: 0,
+    reach: 980000,
+    roi: 3.4
   }
 ];
 
-// Generate mock inventory
+// Enhanced mock inventory with more variety
 export const mockInventory: Inventory[] = [
   {
     id: '1',
@@ -207,6 +264,51 @@ export const mockInventory: Inventory[] = [
     availabilityStart: new Date('2024-11-01'),
     availabilityEnd: new Date('2024-12-31'),
     price: 95000,
+    status: 'Available'
+  },
+  // Additional inventory for better visualization
+  {
+    id: '9',
+    type: 'Subway Platform',
+    location: 'Manhattan, NYC',
+    mediaOwner: 'MTA Media',
+    size: '12x5 ft',
+    availabilityStart: new Date('2024-11-01'),
+    availabilityEnd: new Date('2025-01-31'),
+    price: 28000,
+    status: 'Available'
+  },
+  {
+    id: '10',
+    type: 'Stadium LED',
+    location: 'MetLife Stadium, NJ',
+    mediaOwner: 'Legends Hospitality',
+    size: '50x20 ft',
+    availabilityStart: new Date('2024-12-01'),
+    availabilityEnd: new Date('2025-02-28'),
+    price: 200000,
+    status: 'Pending'
+  },
+  {
+    id: '11',
+    type: 'Bus Wrap',
+    location: 'Downtown Seattle',
+    mediaOwner: 'King County Metro',
+    size: 'Full Bus',
+    availabilityStart: new Date('2024-11-15'),
+    availabilityEnd: new Date('2025-01-15'),
+    price: 15000,
+    status: 'Available'
+  },
+  {
+    id: '12',
+    type: 'Podcast Ad Slot',
+    location: 'National',
+    mediaOwner: 'Spotify',
+    size: '30 seconds',
+    availabilityStart: new Date('2024-10-01'),
+    availabilityEnd: new Date('2024-12-31'),
+    price: 5000,
     status: 'Available'
   }
 ];
