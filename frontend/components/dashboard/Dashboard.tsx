@@ -9,28 +9,64 @@ import InventoryTable from './InventoryTable';
 import AIAssistant from './AIAssistant';
 import QuickActions from './QuickActions';
 import RecentActivity from './RecentActivity';
+import CreateCampaignModal from './modals/CreateCampaignModal';
+import ImportDataModal from './modals/ImportDataModal';
+import SettingsModal from './modals/SettingsModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, BarChart3, Package, Activity, Zap } from 'lucide-react';
+import { User } from '../App';
 
 interface DashboardProps {
+  user: User;
   onNavigateToHero: () => void;
+  onLogout: () => void;
 }
 
-export default function Dashboard({ onNavigateToHero }: DashboardProps) {
+export default function Dashboard({ user, onNavigateToHero, onLogout }: DashboardProps) {
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showCreateCampaign, setShowCreateCampaign] = useState(false);
+  const [showImportData, setShowImportData] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'New Campaign':
+        setShowCreateCampaign(true);
+        break;
+      case 'Import Data':
+        setShowImportData(true);
+        break;
+      case 'Settings':
+        setShowSettings(true);
+        break;
+      case 'Generate Report':
+        // This would trigger report generation
+        console.log('Generating report...');
+        break;
+      case 'Optimize Campaigns':
+        setShowAIAssistant(true);
+        break;
+      case 'Schedule Campaign':
+        // This would open campaign scheduler
+        console.log('Opening campaign scheduler...');
+        break;
+      default:
+        console.log(`Action: ${action}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DashboardLayout onNavigateToHero={onNavigateToHero}>
+      <DashboardLayout user={user} onNavigateToHero={onNavigateToHero} onLogout={onLogout}>
         <div className="space-y-8">
           {/* Welcome Section */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold mb-2">Welcome back to ADmyBRAND</h1>
+                <h1 className="text-2xl font-bold mb-2">Welcome back, {user.name}!</h1>
                 <p className="text-blue-100">
                   Your campaigns are performing 24% better than last month. Here's your overview.
                 </p>
@@ -49,7 +85,7 @@ export default function Dashboard({ onNavigateToHero }: DashboardProps) {
           <KPICards />
 
           {/* Quick Actions */}
-          <QuickActions />
+          <QuickActions onAction={handleQuickAction} />
 
           {/* Main Content Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -195,9 +231,21 @@ export default function Dashboard({ onNavigateToHero }: DashboardProps) {
         </div>
       </DashboardLayout>
 
-      {/* AI Assistant Modal */}
+      {/* Modals */}
       {showAIAssistant && (
         <AIAssistant onClose={() => setShowAIAssistant(false)} />
+      )}
+      
+      {showCreateCampaign && (
+        <CreateCampaignModal onClose={() => setShowCreateCampaign(false)} />
+      )}
+      
+      {showImportData && (
+        <ImportDataModal onClose={() => setShowImportData(false)} />
+      )}
+      
+      {showSettings && (
+        <SettingsModal user={user} onClose={() => setShowSettings(false)} />
       )}
     </div>
   );

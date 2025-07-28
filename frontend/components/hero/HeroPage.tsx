@@ -20,14 +20,16 @@ import {
   Sparkles,
   Bot,
   ChevronRight,
-  Play
+  Play,
+  LogIn
 } from 'lucide-react';
 
 interface HeroPageProps {
   onNavigateToDashboard: () => void;
+  onNavigateToLogin: () => void;
 }
 
-export default function HeroPage({ onNavigateToDashboard }: HeroPageProps) {
+export default function HeroPage({ onNavigateToDashboard, onNavigateToLogin }: HeroPageProps) {
   const [currentMetric, setCurrentMetric] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -112,6 +114,10 @@ export default function HeroPage({ onNavigateToDashboard }: HeroPageProps) {
               <Button variant="ghost" size="sm">Features</Button>
               <Button variant="ghost" size="sm">Pricing</Button>
               <Button variant="ghost" size="sm">Contact</Button>
+              <Button variant="outline" onClick={onNavigateToLogin}>
+                <LogIn className="w-4 h-4 mr-2" />
+                Sign In
+              </Button>
               <Button onClick={onNavigateToDashboard} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 Launch Dashboard
                 <ArrowRight className="w-4 h-4 ml-2" />

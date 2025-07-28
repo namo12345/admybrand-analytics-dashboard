@@ -13,15 +13,19 @@ import {
   Settings,
   User,
   Home,
-  Sparkles
+  Sparkles,
+  LogOut
 } from 'lucide-react';
+import { User as UserType } from '../App';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  user: UserType;
   onNavigateToHero: () => void;
+  onLogout: () => void;
 }
 
-export default function DashboardLayout({ children, onNavigateToHero }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, user, onNavigateToHero, onLogout }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -60,7 +64,7 @@ export default function DashboardLayout({ children, onNavigateToHero }: Dashboar
                   <input
                     type="text"
                     placeholder="Search campaigns..."
-                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
                   />
                 </div>
               </div>
@@ -73,32 +77,47 @@ export default function DashboardLayout({ children, onNavigateToHero }: Dashboar
                 </span>
               </Button>
 
-              {/* Settings */}
-              <Button variant="ghost" size="sm">
-                <Settings className="w-4 h-4" />
-              </Button>
-
-              {/* User Profile */}
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-gray-900">John Doe</p>
-                  <p className="text-xs text-gray-500">Campaign Manager</p>
+              {/* User Profile Dropdown */}
+              <div className="relative group">
+                <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500">{user.role}</p>
+                  </div>
+                </button>
+                
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="p-3 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                  </div>
+                  <div className="py-1">
+                    <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                      <Settings className="w-4 h-4" />
+                      <span>Settings</span>
+                    </button>
+                    <button 
+                      onClick={onNavigateToHero}
+                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                    >
+                      <Home className="w-4 h-4" />
+                      <span>Home</span>
+                    </button>
+                    <hr className="my-1" />
+                    <button 
+                      onClick={onLogout}
+                      className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign out</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              {/* Back to Home */}
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={onNavigateToHero}
-                className="hidden lg:flex items-center space-x-2"
-              >
-                <Home className="w-4 h-4" />
-                <span>Home</span>
-              </Button>
             </div>
           </div>
         </div>
