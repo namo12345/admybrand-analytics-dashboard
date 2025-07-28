@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronUp, ChevronDown, Download, ChevronLeft, ChevronRight } from 'lucide-react';
-import { mockCampaigns } from '../../lib/data';
 import { Campaign, CampaignStatus } from '../../lib/types';
 import { formatCurrency, formatNumber, formatDate, formatROI, filterCampaigns, sortData, exportToCSV } from '../../lib/utils';
 import { useTableData } from '../../hooks/useTableData';
@@ -15,7 +14,12 @@ import TableFilters from '../filters/TableFilters';
 import { useToast } from '@/components/ui/use-toast';
 import { useTheme } from '../providers/ThemeProvider';
 
-export default function CampaignTable() {
+interface CampaignTableProps {
+  data: Campaign[];
+  onDataChange: () => void;
+}
+
+export default function CampaignTable({ data: campaignsData, onDataChange }: CampaignTableProps) {
   const { toast } = useToast();
   const { isDark } = useTheme();
 
@@ -35,7 +39,7 @@ export default function CampaignTable() {
     goToPreviousPage,
     setPageSize
   } = useTableData({
-    data: mockCampaigns,
+    data: campaignsData || [],
     initialPageSize: 10,
     filterFunction: filterCampaigns,
     sortFunction: (data, sortState) => sortData(data, sortState, (campaign, field) => {

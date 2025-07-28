@@ -20,27 +20,6 @@ export interface User {
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewType>('hero');
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Check for existing session on app load
-  useEffect(() => {
-    const checkSession = () => {
-      const savedUser = localStorage.getItem('admybrand_user');
-      if (savedUser) {
-        try {
-          const userData = JSON.parse(savedUser);
-          setUser(userData);
-          setCurrentView('dashboard');
-        } catch (error) {
-          console.error('Error parsing saved user data:', error);
-          localStorage.removeItem('admybrand_user');
-        }
-      }
-      setIsLoading(false);
-    };
-
-    checkSession();
-  }, []);
 
   const navigateToDashboard = () => {
     if (user) {
@@ -69,21 +48,6 @@ export default function App() {
     localStorage.removeItem('admybrand_user');
     setCurrentView('hero');
   };
-
-  if (isLoading) {
-    return (
-      <ThemeProvider>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            </div>
-            <p className="text-gray-600 dark:text-gray-300">Loading ADmyBRAND...</p>
-          </div>
-        </div>
-      </ThemeProvider>
-    );
-  }
 
   return (
     <ThemeProvider>

@@ -19,6 +19,7 @@ import { User } from '../../App';
 import { useTheme } from '../providers/ThemeProvider';
 import { campaignService, inventoryService } from '../../lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
+import { Campaign, Inventory } from '../../lib/types';
 
 interface DashboardProps {
   user: User;
@@ -32,31 +33,10 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
   const [showCreateCampaign, setShowCreateCampaign] = useState(false);
   const [showImportData, setShowImportData] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [campaigns, setCampaigns] = useState([]);
-  const [inventory, setInventory] = useState([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [inventory, setInventory] = useState<Inventory[]>([]);
   const { isDark } = useTheme();
   const { toast } = useToast();
-
-  // Load real-time data
-  useEffect(() => {
-    loadData();
-    
-    // Set up real-time subscriptions
-    const campaignSubscription = campaignService.subscribe((payload) => {
-      console.log('Campaign update:', payload);
-      loadData(); // Reload data on changes
-    });
-
-    const inventorySubscription = inventoryService.subscribe((payload) => {
-      console.log('Inventory update:', payload);
-      loadData(); // Reload data on changes
-    });
-
-    return () => {
-      if (campaignSubscription?.unsubscribe) campaignSubscription.unsubscribe();
-      if (inventorySubscription?.unsubscribe) inventorySubscription.unsubscribe();
-    };
-  }, []);
 
   const loadData = async () => {
     try {
@@ -64,14 +44,44 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
         campaignService.getAll(),
         inventoryService.getAll()
       ]);
-      setCampaigns(campaignData);
-      setInventory(inventoryData);
+      
+      setCampaigns(campaignData.map((c: any) => ({
+        ...c,
+        mediaType: c.media_type,
+        startDate: new Date(c.start_date),
+        endDate: new Date(c.end_date),
+      })));
+      
+      setInventory(inventoryData.map((i: any) => ({
+        ...i,
+        mediaOwner: i.media_owner,
+        availabilityStart: new Date(i.availability_start),
+        availabilityEnd: new Date(i.availability_end),
+      })));
     } catch (error) {
       console.error('Error loading data:', error);
-      // Don't show error toast, just log it
       console.log('Using fallback data');
     }
   };
+
+  useEffect(() => {
+    loadData();
+    
+    const campaignSubscription = campaignService.subscribe((payload) => {
+      console.log('Campaign update:', payload);
+      loadData();
+    });
+
+    const inventorySubscription = inventoryService.subscribe((payload) => {
+      console.log('Inventory update:', payload);
+      loadData();
+    });
+
+    return () => {
+      if (campaignSubscription?.unsubscribe) campaignSubscription.unsubscribe();
+      if (inventorySubscription?.unsubscribe) inventorySubscription.unsubscribe();
+    };
+  }, []);
 
   const handleQuickAction = (action: string) => {
     switch (action) {
@@ -93,27 +103,36 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
       case 'Optimize Campaigns':
         setShowAIAssistant(true);
         break;
-      case 'Schedule Campaign':
-        toast({
-          title: "Campaign scheduler",
-          description: "Campaign scheduling feature coming soon!",
-        });
-        break;
-      case 'View Analytics':
-        setActiveTab('analytics');
-        break;
       default:
         console.log(`Action: ${action}`);
     }
   };
 
-  const handleCampaignCreated = () => {
-    loadData(); // Reload data after creating campaign
+  const handleCampaignCreated = (newCampaign: any) => {
+    const appCampaign: Campaign = {
+      id: newCampaign.id || Date.now().toString(),
+      name: newCampaign.name,
+      mediaType: newCampaign.media_type,
+      channel: newCampaign.channel,
+      startDate: new Date(newCampaign.start_date),
+      endDate: new Date(newCampaign.end_date),
+      status: newCampaign.status,
+      budget: newCampaign.budget,
+      impressions: newCampaign.impressions,
+      clicks: newCampaign.clicks,
+      reach: newCampaign.reach,
+      roi: newCampaign.roi,
+    };
+    setCampaigns(prev => [appCampaign, ...prev]);
     setShowCreateCampaign(false);
+    toast({
+      title: "Campaign created successfully!",
+      description: `"${newCampaign.name}" has been added to your campaigns.`,
+    });
   };
 
   const handleDataImported = () => {
-    loadData(); // Reload data after importing
+    loadData();
     setShowImportData(false);
   };
 
@@ -175,7 +194,7 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <CampaignTable />
+                  <CampaignTable data={campaigns} onDataChange={loadData} />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -191,7 +210,7 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <InventoryTable />
+                  <InventoryTable data={inventory} onDataChange={loadData} />
                 </CardContent>
               </Card>
             </TabsContent>

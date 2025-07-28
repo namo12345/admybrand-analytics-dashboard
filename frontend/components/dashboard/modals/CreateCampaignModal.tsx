@@ -16,7 +16,7 @@ import { useTheme } from '../../providers/ThemeProvider';
 
 interface CreateCampaignModalProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (newCampaign: any) => void;
 }
 
 export default function CreateCampaignModal({ onClose, onSuccess }: CreateCampaignModalProps) {
@@ -57,14 +57,8 @@ export default function CreateCampaignModal({ onClose, onSuccess }: CreateCampai
         roi: 0
       };
 
-      await campaignService.create(campaignData);
-
-      toast({
-        title: "Campaign created successfully!",
-        description: `"${formData.name}" has been added to your campaigns.`,
-      });
-
-      onSuccess();
+      const newCampaign = await campaignService.create(campaignData);
+      onSuccess(newCampaign);
     } catch (error) {
       console.error('Error creating campaign:', error);
       toast({

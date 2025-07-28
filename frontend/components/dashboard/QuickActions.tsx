@@ -10,9 +10,7 @@ import {
   BarChart3, 
   Target,
   Zap,
-  Calendar,
-  Settings,
-  TrendingUp
+  Settings
 } from 'lucide-react';
 import { useTheme } from '../providers/ThemeProvider';
 
@@ -27,7 +25,7 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
     {
       icon: Plus,
       title: 'New Campaign',
-      description: 'Create advertising campaign',
+      description: 'Create a new campaign',
       color: isDark ? 'bg-blue-900/20 hover:bg-blue-900/30 text-blue-400 border-blue-800' : 'bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200',
       action: 'New Campaign'
     },
@@ -51,20 +49,6 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
       description: 'AI-powered suggestions',
       color: isDark ? 'bg-orange-900/20 hover:bg-orange-900/30 text-orange-400 border-orange-800' : 'bg-orange-50 hover:bg-orange-100 text-orange-600 border-orange-200',
       action: 'Optimize Campaigns'
-    },
-    {
-      icon: Calendar,
-      title: 'Schedule Campaign',
-      description: 'Plan future launches',
-      color: isDark ? 'bg-pink-900/20 hover:bg-pink-900/30 text-pink-400 border-pink-800' : 'bg-pink-50 hover:bg-pink-100 text-pink-600 border-pink-200',
-      action: 'Schedule Campaign'
-    },
-    {
-      icon: TrendingUp,
-      title: 'View Analytics',
-      description: 'Real-time insights',
-      color: isDark ? 'bg-indigo-900/20 hover:bg-indigo-900/30 text-indigo-400 border-indigo-800' : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border-indigo-200',
-      action: 'View Analytics'
     }
   ];
 
@@ -80,7 +64,7 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {actions.map((action, index) => (
             <Button
               key={index}
@@ -94,10 +78,10 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
                 <action.icon className="w-6 h-6" />
               </div>
               <div className="text-center space-y-1">
-                <div className="font-medium text-sm leading-tight whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+                <div className="font-medium text-sm leading-tight">
                   {action.title}
                 </div>
-                <div className="text-xs opacity-70 leading-tight whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+                <div className="text-xs opacity-70 leading-tight">
                   {action.description}
                 </div>
               </div>
