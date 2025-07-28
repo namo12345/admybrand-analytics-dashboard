@@ -16,7 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, BarChart3, Package, Zap } from 'lucide-react';
 import { User } from '../../App';
-import { campaignService, inventoryService } from '../../lib/supabase';
+import { campaignService, inventoryService, analyticsService } from '../../lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
 import { Campaign, Inventory } from '../../lib/types';
 
@@ -88,12 +88,6 @@ export default function Dashboard({ user, onNavigateToHero, onLogout }: Dashboar
         break;
       case 'Import Data':
         setShowImportData(true);
-        break;
-      case 'Generate Report':
-        toast({
-          title: "Generating report",
-          description: "Your performance report is being generated...",
-        });
         break;
       case 'Optimize Campaigns':
         setShowAIAssistant(true);

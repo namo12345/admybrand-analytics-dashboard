@@ -103,33 +103,42 @@ export default function AnalyticsView() {
   ];
 
   const exportData = () => {
-    const csvData = performanceData.map((item: any) => ({
-      Campaign: item.name,
-      'Media Type': item.media_type,
-      Budget: item.budget,
-      Impressions: item.impressions,
-      Clicks: item.clicks,
-      ROI: item.roi,
-      Status: item.status
-    }));
+    try {
+      const csvData = performanceData.map((item: any) => ({
+        Campaign: item.name,
+        'Media Type': item.media_type,
+        Budget: item.budget,
+        Impressions: item.impressions,
+        Clicks: item.clicks,
+        ROI: item.roi,
+        Status: item.status
+      }));
 
-    const csvContent = [
-      Object.keys(csvData[0] || {}).join(','),
-      ...csvData.map(row => Object.values(row).join(','))
-    ].join('\n');
+      const csvContent = [
+        Object.keys(csvData[0] || {}).join(','),
+        ...csvData.map(row => Object.values(row).join(','))
+      ].join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `analytics-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analytics-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
 
-    toast({
-      title: "Export successful",
-      description: "Analytics data exported to CSV",
-    });
+      toast({
+        title: "Export successful",
+        description: "Analytics data exported to CSV",
+      });
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast({
+        title: "Export failed",
+        description: "There was an error exporting the data",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

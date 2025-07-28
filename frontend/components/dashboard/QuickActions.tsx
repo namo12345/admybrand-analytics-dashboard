@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { 
   Plus, 
   Upload, 
-  BarChart3, 
   Target,
   Zap
 } from 'lucide-react';
@@ -33,13 +32,6 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
       action: 'Import Data'
     },
     {
-      icon: BarChart3,
-      title: 'Generate Report',
-      description: 'Create performance reports',
-      color: 'bg-purple-50 hover:bg-purple-100 text-purple-600 border-purple-200',
-      action: 'Generate Report'
-    },
-    {
       icon: Target,
       title: 'Optimize Campaigns',
       description: 'AI-powered suggestions',
@@ -60,7 +52,7 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {actions.map((action, index) => (
             <Button
               key={index}
