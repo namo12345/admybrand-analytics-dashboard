@@ -1,5 +1,5 @@
 // Component Type: Manual
-// AI Assistant component for interactive help and insights - Fixed suggestions and text overflow
+// AI Assistant component for interactive help and insights - Fixed suggestions and text overflow with scrolling
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -176,68 +176,70 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
             </div>
           </div>
 
-          {/* Messages */}
-          <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                    <div className={`p-3 rounded-lg break-words ${
-                      message.type === 'user' 
-                        ? 'bg-blue-600 text-white' 
-                        : 'bg-gray-100 text-gray-900'
-                    }`}>
-                      <div className="whitespace-pre-wrap text-sm leading-relaxed overflow-wrap-anywhere word-break-break-word">
-                        {message.content}
+          {/* Messages with Scrolling */}
+          <div className="flex-1 min-h-0">
+            <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
+              <div className="space-y-4">
+                {messages.map((message) => (
+                  <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[85%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                      <div className={`p-3 rounded-lg break-words ${
+                        message.type === 'user' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-900'
+                      }`}>
+                        <div className="whitespace-pre-wrap text-sm leading-relaxed overflow-wrap-anywhere word-break-break-word">
+                          {message.content}
+                        </div>
+                      </div>
+                      
+                      {message.suggestions && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {message.suggestions.map((suggestion, index) => (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleSuggestionClick(suggestion)}
+                              className="text-xs h-7 px-2 py-1 max-w-full"
+                            >
+                              <Sparkles className="w-3 h-3 mr-1 flex-shrink-0" />
+                              <span className="truncate text-left">{suggestion}</span>
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="text-xs text-gray-500 mt-1">
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
                     
-                    {message.suggestions && (
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {message.suggestions.map((suggestion, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            className="text-xs h-7 px-2 py-1 max-w-full"
-                          >
-                            <Sparkles className="w-3 h-3 mr-1 flex-shrink-0" />
-                            <span className="truncate text-left">{suggestion}</span>
-                          </Button>
-                        ))}
+                    {message.type === 'ai' && (
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2 order-0 flex-shrink-0 mt-0">
+                        <Bot className="w-4 h-4 text-white" />
                       </div>
                     )}
-                    
-                    <div className="text-xs text-gray-500 mt-1">
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
                   </div>
-                  
-                  {message.type === 'ai' && (
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2 order-0 flex-shrink-0 mt-0">
+                ))}
+                
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
-                  )}
-                </div>
-              ))}
-              
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
-                    <Bot className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-gray-100 p-3 rounded-lg">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="bg-gray-100 p-3 rounded-lg">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
 
           {/* Input */}
           <div className="p-4 border-t border-gray-200 flex-shrink-0">
