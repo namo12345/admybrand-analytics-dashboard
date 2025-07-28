@@ -1,5 +1,5 @@
 // Component Type: Manual
-// AI Assistant component for interactive help and insights - Optimized responses
+// AI Assistant component for interactive help and insights - Fixed suggestions and text overflow
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -60,7 +60,10 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
 
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+      const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollElement) {
+        scrollElement.scrollTop = scrollElement.scrollHeight;
+      }
     }
   }, [messages]);
 
@@ -136,7 +139,7 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-2xl h-[600px] flex flex-col bg-white border-gray-200">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-gray-200">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
               <Bot className="w-5 h-5 text-white" />
@@ -151,9 +154,9 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
           </Button>
         </CardHeader>
 
-        <CardContent className="flex-1 flex flex-col p-0">
+        <CardContent className="flex-1 flex flex-col p-0 min-h-0">
           {/* Quick Actions */}
-          <div className="p-4 border-b bg-gray-50">
+          <div className="p-4 border-b bg-gray-50 flex-shrink-0">
             <p className="text-sm font-medium text-gray-700 mb-3">Quick Actions</p>
             <div className="grid grid-cols-2 gap-2">
               {quickActions.map((action, index) => (
@@ -162,12 +165,12 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleQuickAction(action.label)}
-                  className="justify-start h-auto p-2"
+                  className="justify-start h-auto p-2 text-left"
                 >
-                  <div className={`w-6 h-6 rounded ${action.color} flex items-center justify-center mr-2`}>
+                  <div className={`w-6 h-6 rounded ${action.color} flex items-center justify-center mr-2 flex-shrink-0`}>
                     <action.icon className="w-3 h-3" />
                   </div>
-                  <span className="text-xs">{action.label}</span>
+                  <span className="text-xs truncate">{action.label}</span>
                 </Button>
               ))}
             </div>
@@ -184,21 +187,23 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
                         ? 'bg-blue-600 text-white' 
                         : 'bg-gray-100 text-gray-900'
                     }`}>
-                      <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
+                      <div className="whitespace-pre-wrap text-sm leading-relaxed overflow-wrap-anywhere word-break-break-word">
+                        {message.content}
+                      </div>
                     </div>
                     
                     {message.suggestions && (
-                      <div className="mt-2 space-y-1">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         {message.suggestions.map((suggestion, index) => (
                           <Button
                             key={index}
                             variant="outline"
                             size="sm"
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="text-xs h-7 mr-1 mb-1 max-w-full"
+                            className="text-xs h-7 px-2 py-1 max-w-full"
                           >
                             <Sparkles className="w-3 h-3 mr-1 flex-shrink-0" />
-                            <span className="truncate">{suggestion}</span>
+                            <span className="truncate text-left">{suggestion}</span>
                           </Button>
                         ))}
                       </div>
@@ -210,7 +215,7 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
                   </div>
                   
                   {message.type === 'ai' && (
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2 order-0 flex-shrink-0">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2 order-0 flex-shrink-0 mt-0">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
                   )}
@@ -235,7 +240,7 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 flex-shrink-0">
             <div className="flex space-x-2">
               <Input
                 value={inputValue}
@@ -247,7 +252,7 @@ export default function AIAssistant({ onClose }: AIAssistantProps) {
               <Button 
                 onClick={() => handleSendMessage(inputValue)}
                 disabled={!inputValue.trim() || isTyping}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex-shrink-0"
               >
                 <Send className="w-4 h-4" />
               </Button>
